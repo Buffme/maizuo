@@ -1,16 +1,15 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
+  <div>
+    <h1>BALANCE</h1>
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'App'
 }
 </script>
 
 <style lang="scss">
-@import './styles/base.scss';
+
 </style>

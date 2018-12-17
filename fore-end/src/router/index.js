@@ -1,34 +1,86 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Films from '../views/Films.vue';
-import Cinemas from '../views/Cinemas.vue';
-import Center from '../views/Center.vue';
-
-
 Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/films',
-      name: 'films',
-      component: Films
+      path: '/',
+      component: () => import('../views/Home.vue'),
+      children: [
+        {
+          path: '',
+          redirect: '/films/nowPlaying'
+        },
+        {
+          // 首页
+          path: 'films',
+          // name: 'films',
+          component: () => import('../views/Films.vue'),
+          children: [
+            {
+              path: '',
+              redirect: '/films/nowPlaying'
+            },
+            {
+              path: 'nowPlaying',
+              name: 'nowPlaying',
+              component: () => import('../components/NowPlaying/index.vue')
+            },
+            {
+              path: 'comingSoon',
+              name: 'comingSoon',
+              component: () => import('../components/ComingSoon/index.vue')
+            }
+          ]
+        },
+        {
+          // 影院页
+          path: 'cinemas',
+          name: 'cinemas',
+          component: () => import('../views/Cinema.vue')
+        },
+        {
+          // 个人中心页
+          path: 'center',
+          name: 'center',
+          component: () => import('../views/Center.vue')
+        }
+      ]
     },
     {
-      path: '/cinemas',
-      name: 'cinemas',
-      component: Cinemas
+      // 详情页面
+      path: '/film/:filmId',
+      name: 'filmDetail',
+      component: () => import('../views/FilmDetail.vue')
     },
     {
-      path: '/center',
-      name: 'center',
-      component: Center
+      // 用户页面
+      path: '/user',
+      component: () => import('../views/Center.vue'),
+      children: [
+        {
+          path: 'card',
+          name: 'card',
+          component: () => import('../views/Card.vue')
+        },
+        {
+          path: 'balance',
+          name: 'balance',
+          component: () => import('../views/Balance.vue')
+        }
+      ]
+    },
+    {
+      // 拼团页
+      path: '/uugroupon',
+      name: 'uugroupon',
+      component: () => import('../views/Uugroupon.vue')
     },
     {
       path: '*',
-      redirect: '/films'
+      redirect: '/films/nowPlaying'
     }
-
   ]
 })
