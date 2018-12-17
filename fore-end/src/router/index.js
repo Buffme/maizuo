@@ -1,15 +1,34 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+import Films from '../views/Films.vue';
+import Cinemas from '../views/Cinemas.vue';
+import Center from '../views/Center.vue';
+
+
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '/films',
+      name: 'films',
+      component: Films
+    },
+    {
+      path: '/cinemas',
+      name: 'cinemas',
+      component: Cinemas
+    },
+    {
+      path: '/center',
+      name: 'center',
+      component: Center
+    },
+    {
+      path: '*',
+      redirect: '/films'
     }
+
   ]
 })
