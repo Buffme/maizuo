@@ -6,7 +6,7 @@ var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://127.0.0.1:27017/';
 
 
-// 获取影片列表  location:3000/api/film/list
+// 获取影片列表  localhost:3000/api/film/list
 router.get('/list', function(req, res) {
   var pageNum = parseInt(req.query.pageNum) || 1; // 当前第几页
   var pageSize = parseInt(req.query.pageSize) || 5; // 每页显示多少条
@@ -81,6 +81,45 @@ router.get('/list', function(req, res) {
       })
     }
   })
+});
+
+// 获取影片详情  localhost:3000/api/film/detail
+router.get('/detail', function(req, res) {
+  var filmId = parseInt(req.query.filmId);
+  console.log(filmId);
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+    if (err) {
+      console.log('链接数据库失败', err);
+      res.json({
+        code: 1,
+        msg: '网络异常, 请稍候重试'
+      })
+    } else {
+      var db = client.db('maizuo');
+      db.collection('films').find({
+        filmId: filmId
+      }).toArray(function(err, result) {
+        if (err) {
+          console.log(err);
+          res.json({
+            code: 1,
+            msg: '错误'
+          })
+        } else {
+          // 查询成功
+          res.json({
+            code: 0,
+            msg: 'OK',
+            data: {
+              film: result
+            }
+          })
+        }
+        client.close();
+      })
+    }
+  })
+
 })
 
 

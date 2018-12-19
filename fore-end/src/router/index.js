@@ -25,12 +25,12 @@ export default new Router({
             },
             {
               path: 'nowPlaying',
-              name: 'nowPlaying',
+              name: 'NowPlaying',
               component: () => import('../components/NowPlaying/index.vue')
             },
             {
               path: 'comingSoon',
-              name: 'comingSoon',
+              name: 'ComingSoon',
               component: () => import('../components/ComingSoon/index.vue')
             }
           ]
@@ -38,13 +38,13 @@ export default new Router({
         {
           // 影院页
           path: 'cinemas',
-          name: 'cinemas',
+          name: 'Cinemas',
           component: () => import('../views/Cinema.vue')
         },
         {
           // 个人中心页
           path: 'center',
-          name: 'center',
+          name: 'Center',
           component: () => import('../views/Center.vue')
         }
       ]
@@ -58,24 +58,35 @@ export default new Router({
     {
       // 用户页面
       path: '/user',
-      component: () => import('../views/Center.vue'),
+      component: () => import('../views/User.vue'),
       children: [
         {
           path: 'card',
-          name: 'card',
+          name: 'Card',
           component: () => import('../views/Card.vue')
         },
         {
           path: 'balance',
-          name: 'balance',
+          name: 'Balance',
           component: () => import('../views/Balance.vue')
+        },
+        {
+          path: 'settings',
+          name: 'Settings',
+          component: () => import('../views/Settings.vue')
         }
       ]
     },
     {
+      // 登录页面
+      path: '/login',
+      name: 'Login',
+      component: () => import('../views/Login.vue')
+    },
+    {
       // 拼团页
       path: '/uugroupon',
-      name: 'uugroupon',
+      name: 'Uugroupon',
       component: () => import('../views/Uugroupon.vue')
     },
     {

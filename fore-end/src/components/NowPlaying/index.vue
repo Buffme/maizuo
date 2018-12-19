@@ -1,7 +1,10 @@
 <template>
   <!-- list -->
   <div class="film-list-content">
-       <ul>
+    <ul
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="loading"
+      infinite-scroll-distance="10">
       <li
         v-for="(item, index) in films"
         :key="index"
@@ -12,7 +15,7 @@
         <div class="info">
           <div>
             <span class="name">{{ item.name }}</span>
-            <span class="type">{{ item.filmType.name }}</span>
+            <span class="type">{{ item.filmType && item.filmType.name }}</span>
           </div>
           <div>
             <span class="label">观众评分</span>
@@ -25,7 +28,7 @@
             <span class="label">{{ item.nation }} | {{ item.runtime }}分钟</span>
           </div>
         </div>
-        <div class="buy" @click.stop="addCard(item)">购票</div>
+        <div class="buy" @click.stop="addToCart(item.filmId)">购票</div>
         <!-- <button @click.stop="reduceFilm(item)">-</button>
         <input type="text" disabled :value="findNum(item)">
         <button @click.stop="addFilm(item)">+</button> -->
@@ -37,18 +40,25 @@
 
 <script>
 import axios from 'axios';
+import { InfiniteScroll } from 'mint-ui';
 
 export default {
   name: 'NowPlaying',
 
+  // InfiniteScroll 需要使用 directives 来加载
+  directives: { InfiniteScroll },
+
   data () {
     return {
       films: [],
-
       pageNum: 1, // 当前页码
       pageSize: 10, // 每页条数
       totalPage: 0 // 总页数
     }
+  },
+
+  created () {
+    this.getFilms();
   },
 
   methods: {
@@ -69,27 +79,69 @@ export default {
         this.totalPage = Math.ceil(result.data.total / this.pageSize);
 
         if (result.code === 0) {
-          // this.films = result.data.films;
           // 追加
           // this.films = this.films.push(...result.data.films);  √
 
           // for (var i = 0; i < result.data.films.length; i++) {
           //   result.data.films[i].num = 0;
           // }
-
           this.films = this.films.concat(result.data.films);
         } else {
           alert(result.msg);
         }
-
         this.$load.close();
       })
+    },
+    /**
+     * 跳转到详情页
+     * @param {String} filmId 当前影片Id
+     */
+    goDetail (filmId) {
+      this.$router.push({
+        name: 'filmDetail',
+        params: {
+          filmId: filmId
+        }
+      })
+    },
+    /**
+     * 获取所有主演
+     * @param {Array} actors 数据中的主演列表
+     */
+    actorsList (actorsList) {
+      let arr = [];
+      if (actorsList) {
+        arr = actorsList.map(item => {
+          return item.name
+        })
+      }
+      return arr.join(' ');
+    },
+    /**
+     * 跳转到详情页
+     * @param {String} filmId 当前影片Id
+     */
+    addToCart (filmId) {
+      this.$router.push({
+        name: 'cart',
+        params: {
+          filmId: filmId
+        }
+      })
+    },
+    /**
+     * 加载更多
+     */
+    loadMore () {
+      if (this.pageNum < this.totalPage) {
+        this.loading = true;
+        this.pageNum++;
+        this.getFilms();
+      }
+      this.loading = false;
     }
-  },
-
-  created () {
-    this.getFilms();
   }
+
 }
 </script>
 
@@ -159,9 +211,4 @@ export default {
   }
 }
 
-.load-more {
-  height: px2rem(30);
-  line-height: px2rem(30);
-  text-align: center;
-}
 </style>

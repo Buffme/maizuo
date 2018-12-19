@@ -1,5 +1,15 @@
 <template>
   <div class="films-list">
+    <!-- header -->
+    <mt-header title="电影" :class="topBarFixed === true ? 'isFixed' :''">
+      <div slot="left">
+        <span>深圳</span>
+        <i class="iconfont icon-xiala-"></i>
+      </div>
+      <div icon="more" slot="right"></div>
+    </mt-header>
+    <!-- header -->
+
     <!-- 轮播图 -->
     <mt-swipe :auto="1000">
       <mt-swipe-item>
@@ -52,17 +62,51 @@
 </template>
 
 <script>
-import { Swipe, SwipeItem } from 'mint-ui';
+import { Swipe, SwipeItem, Header } from 'mint-ui';
 
 export default {
   name: 'films',
 
+  data () {
+    return {
+      topBarFixed: false
+    }
+  },
+
   components: {
     'mt-swipe': Swipe,
-    'mt-swipe-item': SwipeItem
+    'mt-swipe-item': SwipeItem,
+    'mt-header': Header
+  },
+
+  mounted () {
+    document.querySelector('.films-list').addEventListener('scroll', this.handleScroll, true)
+  },
+
+  beforeDestroyed () {
+    document.querySelector('.films-list').removeEventListener('scroll', this.handleScroll, false)
   },
 
   methods: {
+    /**
+     * 监听滚轮事件,决定header显示与否
+     */
+    handleScroll () {
+      var scrollTop = document.querySelector('.films-list').scrollTop;
+      var swipeTop = document.querySelector('.mint-swipe').offsetHeight;
+      // console.log(scrollTop);
+      if (scrollTop > swipeTop / 2) {
+        document.querySelector('.city-fixed').style.display = 'none';
+        document.querySelector('.mint-header').style.display = 'flex'
+      } else if (scrollTop < swipeTop / 2) {
+        document.querySelector('.city-fixed').style.display = 'block';
+        document.querySelector('.mint-header').style.display = 'none'
+      };
+    },
+
+    // top () {
+    //   document.querySelector('.films-list').scrollTop = 0
+    // },
     /**
      * 切换不同类型影片列表
      * @param {String} type 不同类型影片列表
@@ -84,6 +128,31 @@ export default {
 .films-list {
   flex: 1;
   overflow-y: auto;
+  /* header样式 */
+  .mint-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: px2rem(44);
+    border-bottom: px2rem(1) solid #ededed;
+    line-height: px2rem(44);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    z-index: 3000;
+    background-color: #fff;
+    display: none;
+    color: #2c3e50;
+    .mint-header-button{
+      font-size: px2rem(13);
+      padding-left: px2rem(15);
+    }
+    .mint-header-title{
+      font-size: px2rem(14);
+    }
+  }
+
   /* 轮播图样式 */
   .mint-swipe {
     height: px2rem(210);
@@ -115,6 +184,7 @@ export default {
 
   /* 城市定位的样式 */
   .city-fixed {
+    display: block;
     position: absolute;
     top: px2rem(18);
     left: px2rem(8);
@@ -131,6 +201,8 @@ export default {
 
   /* tab-bar的样式 */
   .tab-bar-wrapper {
+    position: sticky;
+    top: px2rem(44);
     height: px2rem(50);
     border-bottom: px2rem(1) solid #ededed;
     background: #fff;
