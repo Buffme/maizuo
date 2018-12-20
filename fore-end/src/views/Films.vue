@@ -2,7 +2,7 @@
   <div class="films-list">
     <!-- header -->
     <mt-header title="电影" :class="topBarFixed === true ? 'isFixed' :''">
-      <div slot="left">
+      <div slot="left" @click="pickCity">
         <span>深圳</span>
         <i class="iconfont icon-xiala-"></i>
       </div>
@@ -37,7 +37,7 @@
     <!-- 轮播图 -->
 
     <!-- 定位城市 -->
-    <div class="city-fixed">
+    <div class="city-fixed" @click="pickCity">
       <span>深圳</span>
       <i class="iconfont icon-xiala-"></i>
     </div>
@@ -88,6 +88,9 @@ export default {
   },
 
   methods: {
+    pickCity () {
+      this.$router.push('/city')
+    },
     /**
      * 监听滚轮事件,决定header显示与否
      */

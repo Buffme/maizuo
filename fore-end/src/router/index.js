@@ -56,6 +56,18 @@ export default new Router({
       component: () => import('../views/FilmDetail.vue')
     },
     {
+      // 购物车页面
+      path: '/cart',
+      name: 'Cart',
+      component: () => import('../views/Cart.vue')
+    },
+    {
+      // 购物车页面
+      path: '/city',
+      name: 'City',
+      component: () => import('../views/City.vue')
+    },
+    {
       // 用户页面
       path: '/user',
       component: () => import('../views/User.vue'),

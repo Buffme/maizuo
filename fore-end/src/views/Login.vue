@@ -9,7 +9,7 @@
           <div class="phone">
             <input type="tel" maxlength="13" placeholder="手机号" class="input-control" v-model="phoneInput">
             <div class="getSmsCode">
-                获取验证码
+              获取验证码
             </div>
           </div>
           <div class="form-group">

@@ -3,7 +3,7 @@
     <div class="film-con">
       <!-- header -->
       <div class="film-header" :class="{showFilmHeader: isShow}">
-        <div class="goBack">
+        <div class="goBack" @click="goBack">
           <img src="../images/back.jpg" alt="">
         </div>
         <div class="title">{{film.name}}</div>
@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <button class="buy-btn" type="default">选座购票</button>
+    <button class="buy-btn" type="default" @click="goCart">选座购票</button>
   </div>
 </template>
 
@@ -163,6 +163,15 @@ export default {
       } else {
         this.isHide = true
       }
+    },
+    /**
+     * 跳转到购物车页面
+     */
+    goCart () {
+      this.$router.push('/cart');
+    },
+    goBack () {
+      this.$router.go(-1);
     }
   },
 

@@ -23,7 +23,7 @@ export default {
     } else {
       next({
         path: 'login',
-        // 实现从那个页面拦截到登陆页面后，登录成功回跳到原页面，则需要记录原页面
+        // 实现从哪个页面拦截到登陆页面后，登录成功回跳到那个页面，则需要记录那个页面
         query: {
           redirect: to.fullPath
         }
