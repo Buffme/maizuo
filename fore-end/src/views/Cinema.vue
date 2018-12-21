@@ -3,23 +3,23 @@
     <header class="header">
       <div class="left">
         <div class="city" @click="goBack">
-          <span >深圳</span>
+          <span>{{city}}</span>
           <img src="../images/xia.png">
         </div>
       </div>
       <div class="title">
         <div>影院</div>
       </div>
-      <div class="right">
+      <div class="right" @click="goSearch">
         <div class="toCinemaSearch">
           <img src="../images/search.png" alt="">
         </div>
       </div>
     </header>
     <div class="cinema-list-tag">
-      <label class="cinema-list-tag-name">全城
-        <img src="../images/shang.png" style="display: none">
-        <img src="../images/xia.png">
+      <label class="cinema-list-tag-name" :class="{'tag-show': popUp}" @click="getDistricts">全城
+        <img class="tag-up" src="../images/shang.png" :class="{'tag-show': popUp}">
+        <img class="tag-down" src="../images/xia.png" :class="{'tag-show': popUp}">
       </label>
       <label class="cinema-list-tag-name">最近去过
         <img src="../images/shang.png" style="display: none">
@@ -48,35 +48,17 @@
         </li>
       </ul>
     </div>
-    <div class="mint-popup" style="z-index: 2013; display: none;">
+    <div class="mint-popup" :class="{'popup-filter': popUp}">
       <div class="filter-wrap">
         <ul class="district-list">
           <li data="district">
             <div class="selected">全城</div>
           </li>
-          <li data="district">
-            <div class="">福田区</div>
-          </li>
-          <li data="district">
-            <div class="">南山区</div>
-          </li>
-          <li data="district">
-            <div class="">龙华区</div>
-          </li>
-          <li data="district">
-            <div class="">龙岗区</div>
-          </li>
-          <li data="district">
-            <div class="">宝安区</div>
-          </li>
-          <li data="district">
-            <div class="">罗湖区</div>
-          </li>
-          <li data="district">
-            <div class="">盐田区</div>
-          </li>
-          <li data="district">
-            <div class="">坪山区</div>
+          <li data="district"
+          v-for="(item, index) in districtName"
+          :key="index"
+          @click="filterCinemas(item)">
+            <div class="">{{item}}</div>
           </li>
         </ul>
       </div>
@@ -86,39 +68,113 @@
 
 <script>
 import axios from 'axios';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Cinemas',
 
   data () {
     return {
-      cinemaList: []
+      cinemaList: [],
+
+      districtName: [],
+
+      popUp: false
     }
   },
 
+  computed: {
+    ...mapState({
+      city: 'selectedCity'
+    })
+  },
+
   methods: {
-    /**
-     * 获取所有影院信息
-     */
-    getAllCinemas () {
-      axios.get('api/cinema/list').then((response) => {
-        let result = response.data;
-        if (result.code === 0) {
-          this.cinemaList = result.data.data;
-          console.log(this.cinemaList);
+
+    getCinemas () {
+      if (this.city.length > 0) {
+        // 如果selectedCity不为空，则获取根据该城市获取当地的影院
+        axios.get('api/cinema/local', {
+          params: {
+            city: this.city
+          }
+        }).then((response) => {
+          let result = response.data;
+          if (result.code === 0) {
+            this.cinemaList = result.data.data;
+          } else {
+            alert(result.msg);
+          }
+        })
+      } else {
+        // 为空则获取所有影院
+        axios.get('api/cinema/list').then((response) => {
+          let result = response.data;
+          if (result.code === 0) {
+            this.cinemaList = result.data.data;
+          } else {
+            alert(result.msg);
+          }
+        })
+      }
+    },
+
+    getDistricts () {
+      if (this.city.length > 0) {
+        let districtArr = [];
+        axios.get('api/cinema/local', {
+          params: {
+            city: this.city
+          }
+        }).then((response) => {
+          let result = response.data;
+          if (result.code === 0) {
+            result.data.data.forEach(item => {
+              districtArr.push(item.districtName);
+            });
+            this.districtName = [...new Set(districtArr)];
+          } else {
+            alert(result.msg);
+          }
+        });
+        if (this.popUp) {
+          this.popUp = false
         } else {
-          alert(result.msg);
+          this.popUp = true
         }
-      })
+      }
+    },
+
+    filterCinemas (district) {
+      let res = {};
+      this.cinemaList.forEach(item => {
+        let districtName = item.districtName;
+        res[districtName] = res[districtName] || [];
+        res[districtName].push(item);
+      });
+      console.log(res);
+      // res.filter(item => {
+      //   return
+      // })
+      let i;
+      for (i in res) {
+        if (i === district) {
+          this.cinemaList = res[i];
+        }
+      }
     },
 
     goBack () {
       this.$router.push('/city');
+    },
+
+    goSearch () {
+      this.$router.push('/cinema/search')
     }
   },
 
   created () {
-    this.getAllCinemas();
+    this.getCinemas();
   }
 
 }
@@ -209,11 +265,26 @@ export default {
       line-height: px2rem(49);
       font-size: px2rem(14);
       color: #191a1b;
+      &.tag-show {
+        color: #ff5f16;
+      }
       img {
         vertical-align: middle;
         padding-left: px2rem(2);
         width: px2rem(8);
         height: px2rem(3);
+      }
+      .tag-up {
+        display: none;
+        &.tag-show {
+          display: inline-block;
+        }
+      }
+      .tag-down {
+        display: inline-block;
+        &.tag-show {
+          display: none;
+        }
       }
     }
   }
@@ -272,22 +343,28 @@ export default {
 
   }
   .mint-popup {
+    z-index: 2013;
+    display: none;
     width: 100%;
     position: fixed;
-    background: #fff;
-    top: px2rem(94);
+    background: #f4f4f4;
+    top: px2rem(92);
     left: 0;
     transition: .2s ease-out;
+    &.popup-filter{
+      display: block;
+    }
     .filter-wrap {
       width: 100%;
       .district-list {
         width: 100%;
-        padding: px2rem(10) 0 0;
-        margin: 0 0 0 px2rem(10);
+        padding: px2rem(10) 0 0 px2rem(10);
+        // margin: 0 0 0 px2rem(10);
         display: flex;
         justify-content: flex-start;
         align-content: center;
         flex-wrap: wrap;
+        border-bottom: 1px solid rgba(210,214,220,.5);
         li {
           font-size: px2rem(12);
           display: inline-block;

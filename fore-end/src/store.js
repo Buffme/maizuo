@@ -6,14 +6,20 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    page: ''
+    // center页中卖座卡等组件跳转到不同页
+    page: '',
+    // 所选的城市
+    selectedCity: ''
   },
 
   mutations: {
     getPage (state, payload) {
       state.page = payload.pageName;
-    }
+    },
 
+    getSelectedCity (state, payload) {
+      state.selectedCity = payload.city;
+    }
   }
 });
 

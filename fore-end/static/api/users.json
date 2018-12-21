@@ -1,18 +1,5 @@
-[
+
   {
-    "userName": 18824309791,
-    "passCode": 666666
-  },
-  {
-    "userName": 18229870342,
-    "passCode": 870342
-  },
-  {
-    "userName": 13622674782,
-    "passCode": 674782
-  },
-  {
-    "userName": 13873655940,
-    "passCode": 655940
+    "phone": 18824309791,
+    "code": 666666
   }
-]

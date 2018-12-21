@@ -50,6 +50,11 @@ export default new Router({
       ]
     },
     {
+      path: '/cinema/search',
+      name: 'Search',
+      component: () => import('../views/Search.vue')
+    },
+    {
       // 详情页面
       path: '/film/:filmId',
       name: 'filmDetail',
@@ -57,12 +62,12 @@ export default new Router({
     },
     {
       // 购物车页面
-      path: '/cart',
+      path: '/cart/filmId:filmId',
       name: 'Cart',
       component: () => import('../views/Cart.vue')
     },
     {
-      // 购物车页面
+      // 城市页面
       path: '/city',
       name: 'City',
       component: () => import('../views/City.vue')

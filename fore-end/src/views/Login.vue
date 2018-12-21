@@ -53,13 +53,15 @@ export default {
     loginTo () {
       axios.get('static/api/users.json', {
         params: {
-          userName: this.phoneInput,
-          passCode: this.codeInput
+          phone: this.phoneInput,
+          code: this.codeInput
         }
       }).then(res => {
         let result = res.data;
-        if (result.userName === this.phoneInput && result.passCode === this.codeInput) {
-          localStorage.setItem('userName', 'result.userName');
+        console.log(typeof result.code);
+        if (result.phone === parseInt(this.phoneInput) && result.code === parseInt(this.codeInput)) {
+          console.log(typeof result.code);
+          localStorage.setItem('userName', result.phone);
           this.$router.go(-1);
           // this.$router.replace('/center');
           // this.$router.replace(this.$route.query.redirect);

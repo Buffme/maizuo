@@ -3,7 +3,7 @@
     <!-- header -->
     <mt-header title="电影" :class="topBarFixed === true ? 'isFixed' :''">
       <div slot="left" @click="pickCity">
-        <span>深圳</span>
+        <span>{{selectedCity}}</span>
         <i class="iconfont icon-xiala-"></i>
       </div>
       <div icon="more" slot="right"></div>
@@ -11,7 +11,7 @@
     <!-- header -->
 
     <!-- 轮播图 -->
-    <mt-swipe :auto="1000">
+    <mt-swipe :auto="3000">
       <mt-swipe-item>
         <img src="../images/banner1.jpg" alt="">
       </mt-swipe-item>
@@ -38,7 +38,7 @@
 
     <!-- 定位城市 -->
     <div class="city-fixed" @click="pickCity">
-      <span>深圳</span>
+      <span>{{selectedCity}}</span>
       <i class="iconfont icon-xiala-"></i>
     </div>
     <!-- /定位城市 -->
@@ -63,6 +63,7 @@
 
 <script>
 import { Swipe, SwipeItem, Header } from 'mint-ui';
+import { mapState } from 'vuex';
 
 export default {
   name: 'films',
@@ -77,6 +78,12 @@ export default {
     'mt-swipe': Swipe,
     'mt-swipe-item': SwipeItem,
     'mt-header': Header
+  },
+
+  computed: {
+    ...mapState([
+      'selectedCity'
+    ])
   },
 
   mounted () {

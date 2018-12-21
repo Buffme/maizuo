@@ -28,7 +28,8 @@
             <ul>
               <li
               v-for="(item, index) in hotCities"
-              :key="index">{{item}}</li>
+              :key="index"
+              @click="chooseCity(item)">{{item}}</li>
               <!-- <li>上海</li>
               <li>广州</li>
               <li>深圳</li> -->
@@ -194,6 +195,15 @@ export default {
           }
         })
       }
+    },
+
+    chooseCity (city) {
+      console.log(city);
+      this.$store.commit({
+        type: 'getSelectedCity',
+        city: city
+      })
+      this.$router.go(-1);
     },
 
     goBack () {

@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <button class="buy-btn" type="default" @click="goCart">选座购票</button>
+    <button class="buy-btn" type="default" @click="goCart(film.filmId)">购票</button>
   </div>
 </template>
 
@@ -167,8 +167,13 @@ export default {
     /**
      * 跳转到购物车页面
      */
-    goCart () {
-      this.$router.push('/cart');
+    goCart (filmId) {
+      this.$router.push({
+        name: 'Cart',
+        params: {
+          filmId: filmId
+        }
+      })
     },
     goBack () {
       this.$router.go(-1);

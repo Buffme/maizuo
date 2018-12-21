@@ -4,7 +4,8 @@
       <!-- 显示登录 -->
       <div class="avatar" @click="toRegister">
         <img src="../images/unregistered.png" class="avator-icon">
-        <div class="nick-name">立即登录</div>
+        <div class="nick-name" :class="{'hide': showPhone}">立即登录</div>
+        <div class="phone" :class="{'show': showPhone}">{{phone}}</div>
       </div>
       <!-- 显示登录 -->
 
@@ -61,7 +62,25 @@
 export default {
   name: 'Center',
 
+  data () {
+    return {
+      phone: '',
+
+      showPhone: false
+
+    }
+  },
+
   methods: {
+    getPhone () {
+      if (localStorage.getItem('userName')) {
+        this.showPhone = true;
+        this.phone = localStorage.getItem('userName');
+        console.log(this.phone);
+      } else {
+        this.showPhone = false;
+      };
+    },
     /**
      * 跳转到不同的user下面的页面
      * @param {String} page 不同页面
@@ -89,8 +108,14 @@ export default {
     },
 
     toRegister () {
-      this.$router.push('/login');
+      if (!localStorage.getItem('userName')) {
+        this.$router.push('/login');
+      }
     }
+  },
+
+  created () {
+    this.getPhone();
   }
 };
 </script>
@@ -122,6 +147,16 @@ export default {
     }
     .nick-name {
       font-size: px2rem(16);
+      &.hide {
+        display: none;
+      }
+    }
+    .phone {
+      font-size: px2rem(16);
+      display: none;
+      &.show {
+        display: block;
+      }
     }
   }
   .my-order-tab {
